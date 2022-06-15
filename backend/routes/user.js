@@ -1,5 +1,5 @@
 /* Import des controllers */
-const logUser = require("../controllers/user");
+const { logUser, createUser } = require("../controllers/user.js");
 
 /* Import express & configuration du router */
 const express = require("express");
@@ -7,6 +7,6 @@ const express = require("express");
 const userRoutes = express.Router();
 
 userRoutes.post("/signin", logUser);
-/* userRoutes.post("/signup", createUser); */
+userRoutes.post("/signup", createUser);
 
-module.exports = userRoutes;
+module.exports = { userRoutes };

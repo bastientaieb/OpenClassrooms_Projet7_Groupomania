@@ -10,8 +10,8 @@ export default {
   <div class="d-flex gap-1">
     <avatarProfile />
     <div class="d-flex flex-column comments p-1">
-      <p>Antoine Laurençot</p>
-      <p>Salut tu as écouté le nouvel album de Kyo ?</p>
+      <p>Mathieu du Marketing</p>
+      <p>Salut, belle photo</p>
     </div>
   </div>
 </template>

@@ -5,7 +5,7 @@ const express = require("express");
 const cors = require("cors");
 
 /* Import des routes secondaires */
-const userRoutes = require("./routes/user.js");
+const { userRoutes } = require("./routes/user.js");
 
 /* Configuration de l'application et création du port */
 const port = process.env.PORT || "3000";

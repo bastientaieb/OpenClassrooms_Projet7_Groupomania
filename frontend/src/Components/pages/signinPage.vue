@@ -14,22 +14,30 @@ export default {
   },
   methods: {
     checkUsers(email, password) {
-      const token = "token";
-      if (email === !this.email) {
-        throw new Error("Invalid Email");
-      }
-      if (password === !this.password) {
-        throw new Error("Invalid Password");
-      }
-      localStorage.setItem("token:", token);
+      const url = "http://localhost:3000/auth/signin";
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+        .then((res) => {
+          const token = res.token;
+          localStorage.setItem("token:", token);
+          /*  window.location.href = "localhost:3000/"; */
+        })
+        .then((res) => res.status(201).send({ message: "Connexion réussi" }))
+        .catch((err) => console.error(err));
     },
-    /* Méthode qui va récupérer login et mdp, vérifier si il est correct et ajouter le token dans le localStorage */
+  },
+  /* Méthode qui va récupérer login et mdp, vérifier si il est correct et ajouter le token dans le localStorage */
+
+  watch: {
     formatSigninValid(bool) {
       this.invalidConnection = !bool;
     },
     /* Booléen qui regarde si la connexion est valide (!bool = true => Connexion invalide)  */
-  },
-  watch: {
     username(value) {
       const isValueEmpty = value === "";
       this.formatSigninValid(!isValueEmpty);

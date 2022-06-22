@@ -11,12 +11,15 @@ export default {
       imageModified: null,
     };
   },
+
   mounted() {},
   methods: {
     selectionOfFiles(event) {
       this.imageModified = event.target.files[0];
     },
     modifyPost() {
+      /* C'est ici que je n'arrive pas à récupérer l'ID dans la props */
+      /* Même en mettant l'id dans les props ca ne fonctionne pas car le props ID lié à chaque poste créé dynamiquement n'apparait pas. */
       const id = this.$props.id;
       const url = "http://localhost:3000/home/" + id;
       console.log("props: ", id);

@@ -1,3 +1,4 @@
+<!-- Page principal -->
 <script>
 import headerHome from "../layouts/headerHome.vue";
 import cardPost from "../commons/cardPost.vue";
@@ -12,6 +13,13 @@ export default {
       this.$router.push("/signin");
     }
   },
+  /* Vérification que le token de connexion est bien enregistré, sinon redirection vers la page de connexion. */
+    data() {
+      return {
+        posts: [],
+        currentUser: null,
+      };
+    },
   mounted() {
     const url = "http://localhost:3000/home";
     fetch(url, {
@@ -32,12 +40,6 @@ export default {
         this.currentUser = email;
       })
       .catch((error) => console.log("error:", error));
-  },
-  data() {
-    return {
-      posts: [],
-      currentUser: null,
-    };
   },
 };
 </script>

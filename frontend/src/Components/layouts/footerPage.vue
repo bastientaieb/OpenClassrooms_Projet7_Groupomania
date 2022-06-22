@@ -1,3 +1,4 @@
+<!-- Components Footer -->
 <script>
 export default {
   name: "footerPage",

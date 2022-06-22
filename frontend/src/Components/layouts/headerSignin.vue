@@ -1,3 +1,4 @@
+<!-- En-tête de la page Login -->
 <script>
 export default {
   name: "headerSignin",

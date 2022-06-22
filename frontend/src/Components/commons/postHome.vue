@@ -1,3 +1,4 @@
+<!-- Components de publication de post avec le textarea et l'input de sélection d'image -->
 <script>
 export default {
   name: "postHome",
@@ -6,7 +7,7 @@ export default {
       content: "",
       image: null,
     };
-    // Relier au v-model pour enregistrer le contenu des formulaires.
+    // Relier au v-model pour enregistrer le contenu des formulaires et l'image.
   },
   methods: {
     selectionOfFiles(event) {
@@ -18,12 +19,13 @@ export default {
       const formData = new FormData();
       formData.append("content", this.content);
       formData.append("image", this.image);
-      // On relie le content et l'image enregistré pour les envoyer dans la requête.
+      // On relie le content et l'image enregistré pour les envoyer dans la requête avec un formData.
       fetch(url, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           Accept: "application/json",
         },
+        /* On envoi le token pour vérifier que l'utilisateur est bien en droit d'être sur la page d'accueil */
         method: "POST",
         body: formData,
       })
@@ -58,6 +60,7 @@ export default {
       class="input-image mb-3 d-flex justify-content-start align-items-center"
     >
       <button @click="submitPost" class="btn btn-primary" type="submit">
+        <!-- Appel de la requête au click.  -->
         Publier
       </button>
       <input

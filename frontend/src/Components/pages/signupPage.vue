@@ -1,3 +1,4 @@
+<!-- Page d'inscription -->
 <script>
 import headerSignup from "../layouts/headerSignup.vue";
 import footerPage from "../layouts/footerPage.vue";
@@ -13,12 +14,27 @@ export default {
       invalidConnection: false,
     };
   },
+  watch: {
+    /* Booléen qui regarde si la connexion est valide (!bool = true => Connexion invalide)  */
+    username(value) {
+      const isValueEmpty = value === "";
+      this.formatSignupValid(!isValueEmpty);
+    },
+    password(value) {
+      const isValueEmpty = value === "";
+      this.formatSignupValid(!isValueEmpty);
+    },
+  },
   methods: {
     formatSignupValid,
     createUser,
   },
 };
-async function createUser(email, password, confirmPassword, router) {
+function formatSignupValid(bool) {
+  this.invalidConnection = !bool;
+}
+
+async function createUser(email, password, confirmPassword) {
   console.log({ email, password, confirmPassword });
   const url = "http://localhost:3000/auth/signup";
   const body = JSON.stringify({
@@ -39,10 +55,6 @@ async function createUser(email, password, confirmPassword, router) {
   } catch (error) {
     console.error("Erreur du front : " + error);
   }
-}
-
-function formatSignupValid(bool) {
-  this.invalidConnection = !bool;
 }
 </script>
 
@@ -122,6 +134,8 @@ function formatSignupValid(bool) {
       >
         S'inscrire
       </button>
+      <!-- Appel de la requête d'inscription -->
+      <!-- Bouton qui n'apparait pas si les champs ne sont pas remplis -->
     </form>
   </main>
   <footerPage />

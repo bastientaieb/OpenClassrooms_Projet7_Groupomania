@@ -1,3 +1,5 @@
+<!-- En-tête de la page d'inscription -->
+
 <script>
 export default {
   name: "headerSignup",

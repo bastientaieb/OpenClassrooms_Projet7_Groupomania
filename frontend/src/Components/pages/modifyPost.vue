@@ -1,6 +1,8 @@
+<!-- Page de modification des posts -->
 <script>
 import headerHome from "../layouts/headerHome.vue";
 import footerPage from "../layouts/footerPage.vue";
+import axios from "axios";
 export default {
   name: "modifyPost",
   components: { headerHome, footerPage },
@@ -20,26 +22,23 @@ export default {
     modifyPost() {
       /* C'est ici que je n'arrive pas à récupérer l'ID dans la props */
       /* Même en mettant l'id dans les props ca ne fonctionne pas car le props ID lié à chaque poste créé dynamiquement n'apparait pas. */
+
       const id = this.$props.id;
-      const url = "http://localhost:3000/home/" + id;
-      console.log("props: ", id);
+      const url = "http://localhost:3000/home/modify/" + "/" + id;
       const formData = new FormData();
       formData.append("content", this.contentModified);
       formData.append("image", this.imageModified);
-      fetch(url, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application/json",
-        },
-        method: "POST",
-        body: formData,
-      })
+      axios
+        .post(url, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Accept: "application/json",
+          },
+          method: "POST",
+          body: formData,
+        })
         .then((res) => {
-          if (res.status === 200) {
-            return res.json();
-          } else {
-            throw new Error("Erreur de modification du post");
-          }
+          console.log(res);
         })
         .catch((error) => console.error("Erreur front: ", error));
     },

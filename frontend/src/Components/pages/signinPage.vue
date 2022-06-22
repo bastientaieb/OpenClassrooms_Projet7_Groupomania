@@ -1,3 +1,4 @@
+<!-- Page de connexion  -->
 <script>
 import headerSignin from "../layouts/headerSignin.vue";
 import footerPage from "../layouts/footerPage.vue";
@@ -11,6 +12,8 @@ export default {
       password: "bastien",
       invalidConnection: false,
     };
+    /* username et password enregistré automatiquement pour se connecter */
+    /* Booléen qui sert à vérifier si les identifiants sont valides */
   },
   methods: {
     signUser,
@@ -29,6 +32,10 @@ export default {
     },
   },
 };
+function formatSigninValid(bool) {
+  this.invalidConnection = !bool;
+}
+/* Méthode qui défini si le format de connexion est valide en vérifiant si les champs sont vides */
 
 function signUser(email, password) {
   const url = "http://localhost:3000/auth/signin";
@@ -51,21 +58,14 @@ function signUser(email, password) {
       while (tokenInCache == null) {
         tokenInCache = localStorage.getItem("token");
       }
+      // définition du token dans le localStorage puis récupération du token
       this.$router.push("/home");
     })
     .catch((err) => {
       console.error(err);
     });
 }
-/* window.location.href = "http://localhost:3000/home"; */
-
-/* Méthode qui va récupérer login et mdp, vérifier si il est correct et ajouter le token dans le localStorage */
-
-function formatSigninValid(bool) {
-  this.invalidConnection = !bool;
-}
-
-/* Méthode qui défini si le format de connexion est valide en vérifiant si les champs sont vides */
+/* Envoi de la requête avec l'email et le password + redirection vers la page d'accueil */
 </script>
 
 <template>
@@ -125,11 +125,10 @@ function formatSigninValid(bool) {
         "
         :disabled="invalidConnection"
       >
-        <!-- @click pour faire un addEventListener -->
+        <!-- Appel de la requête de connexion -->
+        <!-- Bouton qui n'apparait pas si les champs ne sont pas remplis -->
         Se connecter
       </button>
-      <!-- <p class="mt-5 mb-3 text-muted">Value: {{ username }}</p>
-      <p class="mt-5 mb-3 text-muted">Password: {{ password }}</p> -->
     </form>
   </main>
   <footerPage />

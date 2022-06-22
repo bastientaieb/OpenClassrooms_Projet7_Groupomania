@@ -1,3 +1,4 @@
+<!-- En-tête de la page d'accueil -->
 <script>
 export default {
   name: "headerHome",
@@ -6,8 +7,8 @@ export default {
       localStorage.removeItem("token");
       this.$router.push("/signin");
     },
+    /* Déconnexion et redirection vers la page de connexion en supprimant le token. */
   },
-  // Methode qui permet de supprimer le token de connexion lors de la déconnexion.
 };
 </script>
 
@@ -47,15 +48,13 @@ export default {
             aria-label="Search"
           />
         </form>
-        <router-link to="/signin"
-          ><button
-            @click="logOut"
-            type="button"
-            class="btn btn-warning ms-3 text-dark"
-          >
-            Déconnexion
-          </button></router-link
+        <button
+          @click="logOut"
+          type="button"
+          class="btn btn-warning ms-3 text-dark"
         >
+          Déconnexion
+        </button>
       </div>
     </div>
   </nav>

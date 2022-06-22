@@ -1,3 +1,4 @@
+<!-- Components de l'avatar de profil -->
 <script>
 export default {
   name: "avatarProfile",

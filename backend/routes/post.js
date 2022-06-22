@@ -16,7 +16,7 @@ const { verifyUser } = require("../middlewares/auth.js");
 const postRoutes = express.Router();
 
 postRoutes.post("/", verifyUser, multer, createPosts);
-postRoutes.post("/:id", verifyUser, modifyPost);
+postRoutes.post("/modify/:id", verifyUser, modifyPost);
 postRoutes.post("/:id/like", verifyUser, displayLikes);
 postRoutes.post("/:id", verifyUser, createComments);
 postRoutes.delete("/:id", verifyUser, deletePosts);

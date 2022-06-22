@@ -1,3 +1,4 @@
+<!-- Modèle d'un commentaire -->
 <script>
 import avatarProfile from "./avatarProfile.vue";
 export default {

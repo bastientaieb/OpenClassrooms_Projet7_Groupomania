@@ -1,6 +1,8 @@
+<!-- Modèle d'un post -->
 <script>
 import commentsPost from "./commentsPost.vue";
 import avatarProfile from "./avatarProfile.vue";
+/* Dislike et like en commentaire pour le moment */
 /* import likePost from "./dislike.vue";
 import dislikePost from "./like.vue"; */
 
@@ -8,14 +10,15 @@ export default {
   name: "cardPost",
   components: { commentsPost, avatarProfile /* likePost */ /* dislikePost */ },
   props: ["email", "content", "url", "comments", "id", "currentUser"],
+  // Props pour le contenu dynamique des éléments des posts ()
   data() {
     return {
       comment: null,
     };
-    // relié aux V-model
+    // relié aux V-model (input)
   },
-  mounted() {},
   methods: {
+    /* Envoi de la requête d'ajout d'un commentaire */
     addComments() {
       const url = "http://localhost:3000/home/" + "/" + this.$props.id;
       fetch(url, {
@@ -42,6 +45,7 @@ export default {
         // Actualise la page pour récupérer tous les comments, dont le nouveau
         .catch((Error) => console.error("Erreur:", Error));
     },
+    /* Envoi de la requête de suppression du post et de ses commentaires */
     deletePost() {
       const url = "http://localhost:3000/home/" + "/" + this.$props.id;
       fetch(url, {
@@ -67,12 +71,15 @@ export default {
   },
 };
 </script>
+
 <template>
   <div class="card mb-3">
     <div class="card-header">
       <avatarProfile />
+      <!-- Props email pour l'ajouter dynamiquement -->
       <span id="avatarProfile"> {{ email }} </span>
-      <router-link id="bi-pen" to="/modify" :id="post.id">
+      <router-link id="bi-pen" to="/home/modify">
+        <!-- V-if pour que la modification/suppression n'apparaisse que si l'utilisateur connecté et l'email des props est identique. -->
         <i v-if="currentUser === email" class="bi bi-pen-fill"></i>
       </router-link>
       <i
@@ -87,11 +94,14 @@ export default {
       class="img-fluid rounded-start"
       alt="Photo utilisateur"
     />
+    <!-- Props URL pour l'ajouter dynamiquement SI il y'a une image dans le post -->
     <div class="card-body">
       <p class="card-text mb-4">{{ content }}</p>
+      <!-- Props content pour l'ajouter dynamiquement -->
       <div id="likeAndDislike" class="d-flex mb-3 gap-3">
         <!-- <dislikePost /><likePost /> -->
       </div>
+      <!-- Pour chaque commentaire parmi les commentaires, le component commentsPost sera répliqué avec les Props ci-dessous -->
       <div v-for="comment in comments">
         <commentsPost :email="comment.user.email" :content="comment.content" />
       </div>

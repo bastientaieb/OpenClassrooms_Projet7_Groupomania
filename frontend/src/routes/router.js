@@ -10,7 +10,7 @@ const routes = [
   { name: "signup", path: "/signup", component: signupPage },
   { name: "signin", path: "/signin", component: signinPage },
   { name: "home", path: "/home", component: homePage },
-  { name: "modify", path: "/modify", component: modifyPost },
+  { name: "modify", path: "/home/modify", component: modifyPost },
   { path: "/", redirect: "/home" },
 ];
 // Configuration des routes de l'application
@@ -28,7 +28,6 @@ router.beforeEach((to, from) => {
     return router.push("/signin");
   }
 });
-
 // Appel de la fonction qui vérifie les 3 étapes pour autoriser l'accès aux pages privées.
 // Si vérification incorrecte, redirection vers /signin.
 
@@ -37,7 +36,6 @@ function verifyLogin(to) {
   if (!isTokenInCache()) return true;
   return false;
 }
-
 // Fonction qui vérifie si l'utilisateur est sur une page privée avec un token valide dans le localStorage.
 // Si la page est privée mais qu'il n'y a aucun token dans le local on redirige l'utilisateur vers la page signin.
 // Si la page contient un token mais qu'il n'est pas valide, on le redirige vers la page signin.
@@ -47,14 +45,12 @@ function isPrivatePage(to) {
   const publicPages = ["/signin", "/signup"];
   return !publicPages.includes(to.path);
 }
-
 // Vérfication de la page où l'utilisateur se situe.
 // Définition des pages accessibles à tous.
 
 function isTokenInCache() {
   return localStorage.getItem("token") != null;
 }
-
 // Vérification si un token est dans le Local Storage.
 
 export { router };

@@ -1,7 +1,5 @@
-const user2 = { email: "bastien@taieb.com", password: "taieb" };
-const user1 = { email: "admin-principal@gmail.com", password: "taieb" };
-const user3 = { email: "bastien_taieb70@yahoo.fr", password: "taieb" };
+/* Import database + */
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-const users = [user1, user2, user3];
-
-module.exports = { users };
+module.exports = { prisma };

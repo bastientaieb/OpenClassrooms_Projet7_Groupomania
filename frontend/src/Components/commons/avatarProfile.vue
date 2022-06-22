@@ -1,15 +1,15 @@
 <script>
 export default {
-    name: "avatarProfile",
-}
+  name: "avatarProfile",
+};
 </script>
 
 <template>
-<b-avatar
-      id="profil-picture"
-      src="https://picsum.photos/id/1/200/300"
-    ></b-avatar>
+  <b-avatar
+    class="me-2"
+    id="profil-picture"
+    src="../../../public/avatar.png"
+  ></b-avatar>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

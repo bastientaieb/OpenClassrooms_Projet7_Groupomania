@@ -7,36 +7,17 @@ export default {
   components: { headerSignin, footerPage },
   data() {
     return {
-      username: "bastien@taieb.com",
-      password: "taieb",
+      username: "bastien_taieb70@yahoo.fr",
+      password: "bastien",
       invalidConnection: false,
     };
   },
   methods: {
-    checkUsers(email, password) {
-      const url = "http://localhost:3000/auth/signin";
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      })
-        .then((res) => {
-          const token = res.token;
-          localStorage.setItem("token:", token);
-          /*  window.location.href = "localhost:3000/"; */
-        })
-        .then((res) => res.status(201).send({ message: "Connexion réussi" }))
-        .catch((err) => console.error(err));
-    },
+    signUser,
+    formatSigninValid,
   },
-  /* Méthode qui va récupérer login et mdp, vérifier si il est correct et ajouter le token dans le localStorage */
 
   watch: {
-    formatSigninValid(bool) {
-      this.invalidConnection = !bool;
-    },
     /* Booléen qui regarde si la connexion est valide (!bool = true => Connexion invalide)  */
     username(value) {
       const isValueEmpty = value === "";
@@ -47,8 +28,44 @@ export default {
       this.formatSigninValid(!isValueEmpty);
     },
   },
-  /* Méthode qui défini si le format de connexion est valide en vérifiant si les champs sont vides */
 };
+
+function signUser(email, password) {
+  const url = "http://localhost:3000/auth/signin";
+  const options = {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  };
+  fetch(url, options)
+    .then((res) => {
+      if (res.ok) return res.json();
+    })
+    .then((res) => {
+      const token = res.token;
+      localStorage.setItem("token", token);
+      let tokenInCache;
+      while (tokenInCache == null) {
+        tokenInCache = localStorage.getItem("token");
+      }
+      this.$router.push("/home");
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+/* window.location.href = "http://localhost:3000/home"; */
+
+/* Méthode qui va récupérer login et mdp, vérifier si il est correct et ajouter le token dans le localStorage */
+
+function formatSigninValid(bool) {
+  this.invalidConnection = !bool;
+}
+
+/* Méthode qui défini si le format de connexion est valide en vérifiant si les champs sont vides */
 </script>
 
 <template>
@@ -91,10 +108,10 @@ export default {
         <!-- Appelle de la méthode de vérification de format de connexion -->
         <label for="floatingPassword">Mot de passe</label>
       </div>
-      <span v-if="invalidConnection" class="verifyEmptyInput">
+      <div class="verifyEmptyInput" v-if="invalidConnection">
         <!-- Condition pour que la span apparaisse (Méthode de vérification de format d'input qui doit être false) -->
-        Tous les champs doivent être remplis</span
-      >
+        Tous les champs doivent être remplis
+      </div>
       <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me" /> Remember me
@@ -103,7 +120,9 @@ export default {
       <button
         class="w-100 btn btn-warning btn-primary"
         type="submit"
-        @click.prevent="() => checkUsers(this.username, this.password)"
+        @click.prevent="
+          () => signUser(this.username, this.password, this.$router)
+        "
         :disabled="invalidConnection"
       >
         <!-- @click pour faire un addEventListener -->

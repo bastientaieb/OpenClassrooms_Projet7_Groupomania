@@ -1,6 +1,7 @@
 /* Import des controllers */
 const { logUser, createUser } = require("../controllers/user.js");
 
+
 /* Import express & configuration du router */
 const express = require("express");
 

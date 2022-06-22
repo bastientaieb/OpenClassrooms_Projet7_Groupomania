@@ -3,9 +3,15 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+
+/* Import database + */
+const { prisma } = require("./bdd/bdd.js");
+prisma.user.findMany().then(console.log).catch(console.error);
 
 /* Import des routes secondaires */
 const { userRoutes } = require("./routes/user.js");
+const { postRoutes } = require("./routes/post.js");
 
 /* Configuration de l'application et création du port */
 const port = process.env.PORT || "3000";
@@ -20,7 +26,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 /* routes principales */
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/auth", userRoutes);
+app.use("/home", postRoutes);
 
 /* Configuration du port */
 app.listen(port, () => console.log("port:", port));

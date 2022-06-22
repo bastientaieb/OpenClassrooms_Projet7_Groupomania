@@ -1,19 +1,71 @@
 <script>
 export default {
   name: "postHome",
+  data() {
+    return {
+      content: "",
+      image: null,
+    };
+    // Relier au v-model pour enregistrer le contenu des formulaires.
+  },
+  methods: {
+    selectionOfFiles(event) {
+      this.image = event.target.files[0];
+    },
+    // Permet de sélectionner l'image lors du click.
+    submitPost() {
+      const url = "http://localhost:3000/home";
+      const formData = new FormData();
+      formData.append("content", this.content);
+      formData.append("image", this.image);
+      // On relie le content et l'image enregistré pour les envoyer dans la requête.
+      fetch(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
+        },
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            return res.json();
+          } else {
+            throw new Error("Erreur de chargement du contenu");
+          }
+        })
+        .then(() => {
+          this.$router.go();
+        })
+        .catch((Error) => console.error("Erreur front :", Error));
+    },
+  },
 };
 </script>
 
 <template>
   <div id="center-textarea">
     <div class="form-floating" id="center">
-      <textarea placeholder="Publier..." id="floatingTextarea"></textarea>
+      <textarea
+        placeholder="Publier..."
+        id="floatingTextarea"
+        v-model="content"
+      ></textarea>
+      <!-- Relié au data() -->
     </div>
     <div
       class="input-image mb-3 d-flex justify-content-start align-items-center"
     >
-      <button class="btn btn-primary" type="submit">Publier</button>
-      <input type="file" class="custom-file-input" id="inputGroupFile03" />
+      <button @click="submitPost" class="btn btn-primary" type="submit">
+        Publier
+      </button>
+      <input
+        type="file"
+        class="custom-file-input"
+        id="inputGroupFile03"
+        @change="selectionOfFiles"
+      />
     </div>
   </div>
   <hr class="dropdown-divider mt-5" />

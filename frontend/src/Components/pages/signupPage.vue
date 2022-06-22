@@ -1,10 +1,49 @@
 <script>
 import headerSignup from "../layouts/headerSignup.vue";
 import footerPage from "../layouts/footerPage.vue";
+import axios from "axios";
 export default {
   name: "signupPage",
   components: { headerSignup, footerPage },
+  data() {
+    return {
+      username: "bastien_taieb70@yahoo.fr",
+      password: "bastien",
+      confirmPassword: "bastien",
+      invalidConnection: false,
+    };
+  },
+  methods: {
+    formatSignupValid,
+    createUser,
+  },
 };
+async function createUser(email, password, confirmPassword, router) {
+  console.log({ email, password, confirmPassword });
+  const url = "http://localhost:3000/auth/signup";
+  const body = JSON.stringify({
+    email,
+    password,
+    confirmPassword,
+  });
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  };
+  try {
+    await axios.post(url, body, options);
+    this.$router.go("/");
+  } catch (error) {
+    console.error("Erreur du front : " + error);
+  }
+}
+
+function formatSignupValid(bool) {
+  this.invalidConnection = !bool;
+}
 </script>
 
 <template>
@@ -26,6 +65,9 @@ export default {
           class="form-control"
           id="floatingInput"
           placeholder="name@example.com"
+          v-model="username"
+          required="true"
+          @invalid="formatSignupValid"
         />
         <label for="floatingInput">Adresse e-mail</label>
       </div>
@@ -35,8 +77,28 @@ export default {
           class="form-control"
           id="floatingPassword"
           placeholder="Password"
+          v-model="password"
+          required="true"
+          @invalid="formatSignupValid"
         />
         <label for="floatingPassword">Mot de passe</label>
+      </div>
+
+      <div class="form-floating">
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Confirmer le mot de passe"
+          v-model="confirmPassword"
+          required="true"
+          @invalid="formatSignupValid"
+        />
+        <label for="floatingPassword">Confirmer le mot de passe</label>
+      </div>
+
+      <div v-if="invalidConnection" class="verifyEmptyInput">
+        <!-- Condition pour que la span apparaisse (Méthode de vérification de format d'input qui doit être false) -->
+        Tous les champs doivent être remplis
       </div>
 
       <div class="checkbox mb-3">
@@ -44,7 +106,20 @@ export default {
           <input type="checkbox" value="remember-me" /> Remember me
         </label>
       </div>
-      <button class="w-100 btn btn-warning btn-primary" type="submit">
+      <button
+        class="w-100 btn btn-warning btn-primary"
+        type="submit"
+        @click.prevent="
+          () =>
+            createUser(
+              this.username,
+              this.password,
+              this.confirmPassword,
+              this.$router
+            )
+        "
+        :disabled="invalidConnection"
+      >
         S'inscrire
       </button>
     </form>

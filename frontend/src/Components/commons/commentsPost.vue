@@ -3,15 +3,25 @@ import avatarProfile from "./avatarProfile.vue";
 export default {
   name: "commentsPost",
   components: { avatarProfile },
+  props: {
+    email: {
+      type: String,
+      require: true,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 
 <template>
   <div class="d-flex gap-1">
     <avatarProfile />
-    <div class="d-flex flex-column comments p-1">
-      <p>Mathieu du Marketing</p>
-      <p>Salut, belle photo</p>
+    <div class="d-flex flex-column comments p-2 mb-3">
+      <p class="gap-1">{{ email }}</p>
+      <p>{{ content }}</p>
     </div>
   </div>
 </template>

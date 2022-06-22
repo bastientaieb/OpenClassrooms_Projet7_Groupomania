@@ -1,6 +1,13 @@
 <script>
 export default {
   name: "headerHome",
+  methods: {
+    logOut() {
+      localStorage.removeItem("token");
+      this.$router.push("/signin");
+    },
+  },
+  // Methode qui permet de supprimer le token de connexion lors de la déconnexion.
 };
 </script>
 
@@ -31,13 +38,6 @@ export default {
               </button></router-link
             >
           </li>
-          <li class="nav-item">
-            <router-link to="/profile"
-              ><button type="button" class="btn bg-white me-2 text-dark">
-                Profil
-              </button></router-link
-            >
-          </li>
         </ul>
         <form role="search">
           <input
@@ -48,7 +48,11 @@ export default {
           />
         </form>
         <router-link to="/signin"
-          ><button type="button" class="btn btn-warning ms-3 text-dark">
+          ><button
+            @click="logOut"
+            type="button"
+            class="btn btn-warning ms-3 text-dark"
+          >
             Déconnexion
           </button></router-link
         >

@@ -1,11 +1,11 @@
-<!-- <script>
+<script>
 import axios from "axios";
 export default {
   name: "likePost",
   props: ["post"],
   data() {
     return {
-      totallike: "",
+      totalLike: "",
     };
   },
   methods: {
@@ -32,15 +32,7 @@ export default {
 </script>
 
 <template>
-  <p id="success"></p>
-  <a id="linkLike"
-    ><i
-      @click.prevent="likePost"
-      class="bi bi-hand-thumbs-up-fill"
-      aria-hidden="true"
-    ></i
-    >({{ totallike }})</a
-  >
+  
 </template>
 
 <style scoped>
@@ -53,4 +45,3 @@ export default {
   cursor: pointer;
 }
 </style>
- -->

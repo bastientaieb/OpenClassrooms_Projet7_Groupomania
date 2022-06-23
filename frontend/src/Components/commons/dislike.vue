@@ -1,4 +1,4 @@
-<!-- <script>
+<script>
 import axios from "axios";
 export default {
   name: "dislikePost",
@@ -54,4 +54,3 @@ export default {
   cursor: pointer;
 }
 </style>
- -->

@@ -95,9 +95,7 @@ function modifyPost(req, res) {
   const id = req.params.id;
   const bodyParse = JSON.stringify(req.body);
   let newPost;
-  /* if (req.file != null) {
-    newPost = JSON.parse(req.body.newPost);
-  } */
+  /* Controllers en cours blocage */
 }
 
 function displayLikes() {

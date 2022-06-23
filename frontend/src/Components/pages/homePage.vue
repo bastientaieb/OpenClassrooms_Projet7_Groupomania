@@ -14,12 +14,12 @@ export default {
     }
   },
   /* Vérification que le token de connexion est bien enregistré, sinon redirection vers la page de connexion. */
-    data() {
-      return {
-        posts: [],
-        currentUser: null,
-      };
-    },
+  data() {
+    return {
+      posts: [],
+      currentUser: null,
+    };
+  },
   mounted() {
     const url = "http://localhost:3000/home";
     fetch(url, {

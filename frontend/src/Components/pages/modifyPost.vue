@@ -2,15 +2,19 @@
 <script>
 import headerHome from "../layouts/headerHome.vue";
 import footerPage from "../layouts/footerPage.vue";
+import cardPost from "../commons/cardPost.vue";
 import axios from "axios";
 export default {
   name: "modifyPost",
-  components: { headerHome, footerPage },
-  props: ["id"],
+  components: { headerHome, footerPage, cardPost },
+  props: [
+    /* post, email, content, url, comments, id, currentUser */
+  ],
   data() {
     return {
       contentModified: "",
       imageModified: null,
+      /* currentUser: null, */
     };
   },
 
@@ -23,6 +27,7 @@ export default {
       /* C'est ici que je n'arrive pas à récupérer l'ID dans la props */
       /* Même en mettant l'id dans les props ca ne fonctionne pas car le props ID lié à chaque poste créé dynamiquement n'apparait pas. */
 
+      console.log();
       const id = this.$props.id;
       const url = "http://localhost:3000/home/modify/" + "/" + id;
       const formData = new FormData();

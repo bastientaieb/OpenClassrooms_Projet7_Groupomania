@@ -2,18 +2,18 @@
 <script>
 import commentsPost from "./commentsPost.vue";
 import avatarProfile from "./avatarProfile.vue";
-/* Dislike et like en commentaire pour le moment */
-/* import likePost from "./dislike.vue";
-import dislikePost from "./like.vue"; */
 
 export default {
   name: "cardPost",
-  components: { commentsPost, avatarProfile /* likePost */ /* dislikePost */ },
+  components: { commentsPost, avatarProfile },
   props: ["email", "content", "url", "comments", "id", "currentUser"],
+
   // Props pour le contenu dynamique des éléments des posts ()
   data() {
     return {
       comment: null,
+      totalLikes: 0,
+      totalDislikes: 0,
     };
     // relié aux V-model (input)
   },
@@ -68,6 +68,12 @@ export default {
         })
         .catch((Error) => console.error("Erreur front :", Error));
     },
+    likePost() {
+      this.totalLikes++;
+    },
+    disLikePost() {
+      this.totalDislikes++;
+    },
   },
 };
 </script>
@@ -78,8 +84,11 @@ export default {
       <avatarProfile />
       <!-- Props email pour l'ajouter dynamiquement -->
       <span id="avatarProfile"> {{ email }} </span>
-      <router-link id="bi-pen" to="/home/modify">
-        <!-- V-if pour que la modification/suppression n'apparaisse que si l'utilisateur connecté et l'email des props est identique. -->
+      <router-link
+        id="bi-pen"
+        to="/home/modify"
+        :to="{ name: 'post', params: { postId: post.id } }"
+      >
         <i v-if="currentUser === email" class="bi bi-pen-fill"></i>
       </router-link>
       <i
@@ -99,7 +108,28 @@ export default {
       <p class="card-text mb-4">{{ content }}</p>
       <!-- Props content pour l'ajouter dynamiquement -->
       <div id="likeAndDislike" class="d-flex mb-3 gap-3">
-        <!-- <dislikePost /><likePost /> -->
+        <div class="Likeconteneur">
+          <button
+            id="linkLike"
+            class="btn btn-outline-success mb-1"
+            @click="likePost"
+          >
+            <i class="bi bi-hand-thumbs-up-fill" aria-hidden="true"></i>
+          </button>
+          <div>{{ totalLikes }} <span id="likeDislike">J'aime</span></div>
+        </div>
+        <div class="Likeconteneur">
+          <button
+            id="linkDislike"
+            class="btn btn-outline-danger mb-1"
+            @click="disLikePost"
+          >
+            <i class="bi bi-hand-thumbs-down-fill" aria-hidden="true"></i>
+          </button>
+          <div>
+            {{ totalDislikes }} <span id="likeDislike">Je n'aime pas</span>
+          </div>
+        </div>
       </div>
       <!-- Pour chaque commentaire parmi les commentaires, le component commentsPost sera répliqué avec les Props ci-dessous -->
       <div v-for="comment in comments">
@@ -128,6 +158,40 @@ export default {
 </template>
 
 <style scoped>
+#likeDislike {
+  font-size: 0.9rem;
+}
+.Likeconteneur {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+#linkLike {
+  border-radius: 50%;
+  border: none;
+}
+#linkDislike {
+  border-radius: 50%;
+  border: none;
+}
+.bi-hand-thumbs-down-fill {
+  font-size: 1.4rem;
+}
+
+#linkDislike:hover {
+  transform: scale(1.02);
+  color: white;
+  cursor: pointer;
+}
+.bi-hand-thumbs-up-fill {
+  font-size: 1.4rem;
+}
+#linkLike:hover {
+  transform: scale(1.02);
+  color: white;
+  cursor: pointer;
+}
+
 #avatarProfile {
   margin-right: auto;
 }

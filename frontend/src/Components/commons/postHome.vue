@@ -31,7 +31,6 @@ export default {
       })
         .then((res) => {
           if (res.status === 200) {
-            console.log(res);
             return res.json();
           } else {
             throw new Error("Erreur de chargement du contenu");
@@ -54,13 +53,11 @@ export default {
         id="floatingTextarea"
         v-model="content"
       ></textarea>
-      <!-- Relié au data() -->
     </div>
     <div
       class="input-image mb-3 d-flex justify-content-start align-items-center"
     >
       <button @click="submitPost" class="btn btn-primary" type="submit">
-        <!-- Appel de la requête au click.  -->
         Publier
       </button>
       <input

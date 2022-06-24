@@ -8,7 +8,7 @@ export default {
 
 <template>
   <!-- Components Signin via le router view  -->
-  <router-view></router-view>
+  <router-view />
 </template>
 
 <style></style>

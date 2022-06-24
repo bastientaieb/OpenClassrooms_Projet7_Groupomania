@@ -9,7 +9,7 @@ export default {
   <b-avatar
     class="me-2"
     id="profil-picture"
-    src="../../../public/avatar.png"
+    src="/avatar.png"
   ></b-avatar>
 </template>
 

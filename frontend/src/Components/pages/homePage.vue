@@ -21,7 +21,7 @@ export default {
     };
   },
   mounted() {
-    const url = "http://localhost:3000/home";
+    const url = "http://localhost:3000/home/";
     fetch(url, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

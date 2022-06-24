@@ -2,49 +2,41 @@
 <script>
 import headerHome from "../layouts/headerHome.vue";
 import footerPage from "../layouts/footerPage.vue";
-import cardPost from "../commons/cardPost.vue";
-import axios from "axios";
 export default {
-  name: "modifyPost",
-  components: { headerHome, footerPage, cardPost },
-  props: [
-    /* post, email, content, url, comments, id, currentUser */
-  ],
+  name: "modify",
+  components: { headerHome, footerPage },
+  props: ["id", ],
   data() {
     return {
-      contentModified: "",
-      imageModified: null,
-      /* currentUser: null, */
+      content: "",
+      image: null,
     };
   },
 
   mounted() {},
   methods: {
     selectionOfFiles(event) {
-      this.imageModified = event.target.files[0];
+      this.image = event.target.files[0];
     },
     modifyPost() {
-      /* C'est ici que je n'arrive pas à récupérer l'ID dans la props */
-      /* Même en mettant l'id dans les props ca ne fonctionne pas car le props ID lié à chaque poste créé dynamiquement n'apparait pas. */
-
-      console.log();
-      const id = this.$props.id;
-      const url = "http://localhost:3000/home/modify/" + "/" + id;
+      const id = this.id;
+      console.log(id);
+      const url = "http://localhost:3000/home/modify/" + id;
       const formData = new FormData();
-      formData.append("content", this.contentModified);
-      formData.append("image", this.imageModified);
-      axios
-        .post(url, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            Accept: "application/json",
-          },
-          method: "POST",
-          body: formData,
-        })
-        .then((res) => {
-          console.log(res);
-        })
+      formData.append("content", this.content);
+      formData.append("image", this.image);
+      fetch(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
+        },
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.json())
+        /* .then(() => {
+          this.$router.go("home/");
+        }) */
         .catch((error) => console.error("Erreur front: ", error));
     },
   },
@@ -68,10 +60,9 @@ export default {
           <textarea
             placeholder="Publier..."
             id="floatingTextarea"
-            v-model="contentModified"
+            v-model="content"
             :id="post.id"
           ></textarea>
-          <!-- Relié au data() -->
         </div>
         <div
           class="input-image mb-3 d-flex justify-content-start align-items-center"

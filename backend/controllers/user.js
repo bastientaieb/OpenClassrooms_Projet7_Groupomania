@@ -33,7 +33,7 @@ async function logUser(req, res) {
   try {
     console.log("user :", user);
     if (user == null) {
-      return res.status(404).send({ error: "User not found" });
+      return res.status(404).send({ error: "Utilisateur introuvable" });
     }
 
     const verifyPassword = await passwordVerification(user, password);

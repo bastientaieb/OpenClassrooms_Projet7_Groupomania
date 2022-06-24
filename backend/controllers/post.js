@@ -92,10 +92,7 @@ async function deletePosts(req, res) {
 }
 
 function modifyPost(req, res) {
-  const id = req.params.id;
-  const bodyParse = JSON.stringify(req.body);
-  let newPost;
-  /* Controllers en cours blocage */
+  console.log("le backend répond");
 }
 
 function displayLikes() {

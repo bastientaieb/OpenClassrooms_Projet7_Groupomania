@@ -7,7 +7,6 @@ export default {
   name: "cardPost",
   components: { commentsPost, avatarProfile },
   props: ["email", "content", "url", "comments", "id", "currentUser"],
-
   // Props pour le contenu dynamique des éléments des posts ()
   data() {
     return {
@@ -20,7 +19,7 @@ export default {
   methods: {
     /* Envoi de la requête d'ajout d'un commentaire */
     addComments() {
-      const url = "http://localhost:3000/home/" + "/" + this.$props.id;
+      const url = "http://localhost:3000/home/" + this.$props.id;
       fetch(url, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,7 +46,7 @@ export default {
     },
     /* Envoi de la requête de suppression du post et de ses commentaires */
     deletePost() {
-      const url = "http://localhost:3000/home/" + "/" + this.$props.id;
+      const url = "http://localhost:3000/home/" + this.$props.id;
       fetch(url, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -84,18 +83,10 @@ export default {
       <avatarProfile />
       <!-- Props email pour l'ajouter dynamiquement -->
       <span id="avatarProfile"> {{ email }} </span>
-      <router-link
-        id="bi-pen"
-        to="/home/modify"
-        :to="{ name: 'post', params: { postId: post.id } }"
-      >
-        <i v-if="currentUser === email" class="bi bi-pen-fill"></i>
+      <router-link id="bi-pen" :to="{ name: 'modify', params: { id: id } }">
+        <i v-if="currentUser" class="bi bi-pen-fill"></i>
       </router-link>
-      <i
-        v-if="currentUser === email"
-        class="bi bi-trash-fill"
-        @click="deletePost"
-      ></i>
+      <i class="bi bi-trash-fill" @click="deletePost"></i>
     </div>
     <img
       v-if="url"

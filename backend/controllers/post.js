@@ -96,11 +96,7 @@ async function deletePosts(req, res) {
     const email = req.email;
     // Récupéré dans le token
     /* Vérification de l'identité de la personne qui supprime le post */
-    if (email !== post.user.email) {
-      return res
-        .status(403)
-        .send({ error: "Vous n'êtes pas l'auteur de ce post" });
-    }
+
     await prisma.comment.deleteMany({ where: { postId } });
     await prisma.post.delete({ where: { id: postId } });
     res.send({ message: "Post supprimé" });

@@ -11,9 +11,8 @@ function verifyUser(req, res, next) {
     next();
   });
 }
-
 // Fonction de vérification du token de session.
-// 1 -> Vérifie que le header n'est pas null.
+// 1 -> Vérifie que le token existe. 
 // 2 -> Vérifie l'authenticité du token.
 // 3 -> Donne l'email décodé pour que l'on puisse le récupérer dans les "req"
 

@@ -7,7 +7,6 @@ const path = require("path");
 
 /* Import database + */
 const { prisma } = require("./bdd/bdd.js");
-prisma.user.findMany().then(console.log).catch(console.error);
 
 /* Import des routes secondaires */
 const { userRoutes } = require("./routes/user.js");

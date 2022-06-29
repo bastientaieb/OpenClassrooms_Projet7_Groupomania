@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
     let newName = name.split(".")[0];
     const extension = MIME_TYPES[file.mimetype];
     callback(null, Date.now() + "-" + newName + "." + extension);
+    req.url = newName;
   },
 });
 // Méthode de gestion et de nomination des images enregistrées.

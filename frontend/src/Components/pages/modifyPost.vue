@@ -2,10 +2,11 @@
 <script>
 import headerHome from "../layouts/headerHome.vue";
 import footerPage from "../layouts/footerPage.vue";
+import axios from "axios";
 export default {
   name: "modify",
   components: { headerHome, footerPage },
-  props: ["id", ],
+  props: ["id", "email", "url"],
   data() {
     return {
       content: "",
@@ -19,13 +20,16 @@ export default {
       this.image = event.target.files[0];
     },
     modifyPost() {
-      const id = this.id;
-      console.log(id);
-      const url = "http://localhost:3000/home/modify/" + id;
+      const id = this.$props.id;
+      const email = this.$props.email;
+      const newImage = this.image;
+      const url = "http://localhost:3000/home/modify/" + this.$props.id;
+
       const formData = new FormData();
       formData.append("content", this.content);
       formData.append("image", this.image);
       fetch(url, {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           Accept: "application/json",
@@ -34,10 +38,7 @@ export default {
         body: formData,
       })
         .then((res) => res.json())
-        /* .then(() => {
-          this.$router.go("home/");
-        }) */
-        .catch((error) => console.error("Erreur front: ", error));
+        .catch((error) => console.error("Erreur du front :", error));
     },
   },
 };
@@ -57,11 +58,11 @@ export default {
     <div class="card-header">
       <div id="center-textarea">
         <div class="form-floating" id="center">
+          <!-- V-model relié au props pour envoyer le contenu dans le formData -->
           <textarea
             placeholder="Publier..."
             id="floatingTextarea"
             v-model="content"
-            :id="post.id"
           ></textarea>
         </div>
         <div

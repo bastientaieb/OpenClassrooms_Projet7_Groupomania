@@ -2,7 +2,8 @@
 <script>
 import commentsPost from "./commentsPost.vue";
 import avatarProfile from "./avatarProfile.vue";
-
+import modify from "../pages/modifyPost.vue";
+import axios from "axios";
 export default {
   name: "cardPost",
   components: { commentsPost, avatarProfile },
@@ -11,12 +12,22 @@ export default {
   data() {
     return {
       comment: null,
-      totalLikes: 0,
-      totalDislikes: 0,
+      role: this.isAdmin(),
+      showLike: true,
+      showDelete: false,
     };
     // relié aux V-model (input)
+    // Gère les droits Administrateurs
+    // Gère les boutons likes / annulations
   },
   methods: {
+    isAdmin() {
+      let userLogged = localStorage.getItem("role");
+      if (userLogged === "ADMIN") {
+        console.log("Administrateur connecté");
+        return userLogged;
+      }
+    },
     /* Envoi de la requête d'ajout d'un commentaire */
     addComments() {
       const url = "http://localhost:3000/home/" + this.$props.id;
@@ -67,11 +78,46 @@ export default {
         })
         .catch((Error) => console.error("Erreur front :", Error));
     },
+    /* Envoi de la requête pour créer un like sur le post */
     likePost() {
-      this.totalLikes++;
+      const url = "http://localhost:3000/home/" + this.$props.id + "/like";
+
+      fetch(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application / json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          email: this.$props.email,
+          id: this.$props.id,
+        }),
+      })
+        .then((res) => res.json())
+        .catch((err) =>
+          console.error({ message: "Impossible de liker ", err })
+        );
     },
-    disLikePost() {
-      this.totalDislikes++;
+    /* Envoi de la requête de suppression du like */
+    deleteLike() {
+      const url = "http://localhost:3000/home/" + this.$props.id + "/like";
+
+      fetch(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application / json",
+          "Content-Type": "application/json",
+        },
+        method: "DELETE",
+        body: JSON.stringify({
+          email: this.$props.email,
+        }),
+      })
+        .then((res) => res.json())
+        .catch((err) =>
+          console.error({ message: "Impossible de supprimer le like ", err })
+        );
     },
   },
 };
@@ -82,11 +128,25 @@ export default {
     <div class="card-header">
       <avatarProfile />
       <!-- Props email pour l'ajouter dynamiquement -->
-      <span id="avatarProfile"> {{ email }} </span>
-      <router-link id="bi-pen" :to="{ name: 'modify', params: { id: id } }">
-        <i v-if="currentUser" class="bi bi-pen-fill"></i>
+      <span id="avatarProfile"> {{ email }}</span>
+      <router-link
+        id="bi-pen"
+        :to="{
+          name: 'modify',
+          params: { id: id, email: email, url: url },
+        }"
+      >
+        <!-- Envoi des params pour récupérer des props pour la modification des posts -->
+        <i
+          v-if="this.role == 'ADMIN' || currentUser == email"
+          class="bi bi-pen-fill"
+        ></i>
       </router-link>
-      <i class="bi bi-trash-fill" @click="deletePost"></i>
+      <i
+        v-if="this.role == 'ADMIN' || currentUser == email"
+        class="bi bi-trash-fill"
+        @click="deletePost"
+      ></i>
     </div>
     <img
       v-if="url"
@@ -100,58 +160,85 @@ export default {
       <!-- Props content pour l'ajouter dynamiquement -->
       <div id="likeAndDislike" class="d-flex mb-3 gap-3">
         <div class="Likeconteneur">
-          <button
-            id="linkLike"
-            class="btn btn-outline-success mb-1"
-            @click="likePost"
-          >
-            <i class="bi bi-hand-thumbs-up-fill" aria-hidden="true"></i>
-          </button>
-          <div>{{ totalLikes }} <span id="likeDislike">J'aime</span></div>
+          <transition name="fade">
+            <button
+              v-on:click="showDelete = !showDelete"
+              v-if="showLike"
+              id="linkLike"
+              class="btn btn-outline-success mb-1"
+              @click="likePost"
+            >
+              <!-- Gestion dynamique des boutons likes, le bouton addLike apparait en premier puis l'annulation est disponible sans l'ajout du like -->
+              <i class="bi bi-hand-thumbs-up-fill" aria-hidden="true"></i>
+            </button>
+          </transition>
+          <div>
+            <transition name="fade"
+              ><span v-if="showLike" id="likeDislike">J'aime</span></transition
+            >
+          </div>
         </div>
         <div class="Likeconteneur">
-          <button
-            id="linkDislike"
-            class="btn btn-outline-danger mb-1"
-            @click="disLikePost"
-          >
-            <i class="bi bi-hand-thumbs-down-fill" aria-hidden="true"></i>
-          </button>
+          <transition name="fade">
+            <button
+              v-on:click="showLike = !showLike"
+              v-if="showDelete"
+              id="linkLike2"
+              class="btn btn-outline-primary mb-1"
+              @click="deleteLike"
+            >
+              <i class="bi bi-hand-thumbs-up-fill" aria-hidden="true"></i>
+            </button>
+          </transition>
           <div>
-            {{ totalDislikes }} <span id="likeDislike">Je n'aime pas</span>
+            <transition name="fade">
+              <span v-if="showDelete" id="deleteLike">Annuler mon like </span>
+            </transition>
           </div>
         </div>
       </div>
-      <!-- Pour chaque commentaire parmi les commentaires, le component commentsPost sera répliqué avec les Props ci-dessous -->
-      <div v-for="comment in comments">
-        <commentsPost :email="comment.user.email" :content="comment.content" />
-      </div>
-      <div class="d-flex">
-        <avatarProfile />
-        <input
-          type="text"
-          class="form-control me-2"
-          placeholder="Votre commentaire..."
-          aria-label="Commentaire"
-          v-model="comment"
-        />
-        <button
-          class="btn btn-primary ms-auto"
-          type="submit"
-          @click="addComments"
-        >
-          Publier
-        </button>
-      </div>
+    </div>
+    <!-- Pour chaque commentaire parmi les commentaires, le component commentsPost sera répliqué avec les Props ci-dessous -->
+    <div v-for="comment in comments">
+      <commentsPost :email="comment.user.email" :content="comment.content" />
+    </div>
+    <div class="d-flex">
+      <avatarProfile />
+      <input
+        type="text"
+        class="form-control me-2"
+        placeholder="Votre commentaire..."
+        aria-label="Commentaire"
+        v-model="comment"
+      />
+      <button
+        class="btn btn-primary ms-auto"
+        type="submit"
+        @click="addComments"
+      >
+        Publier
+      </button>
     </div>
   </div>
   <hr class="dropdown-divider mt-5" />
 </template>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 #likeDislike {
   font-size: 0.9rem;
 }
+#deleteLike {
+  font-size: 0.9rem;
+}
+
 .Likeconteneur {
   display: flex;
   align-items: center;
@@ -161,7 +248,7 @@ export default {
   border-radius: 50%;
   border: none;
 }
-#linkDislike {
+#linkLike2 {
   border-radius: 50%;
   border: none;
 }
@@ -169,7 +256,7 @@ export default {
   font-size: 1.4rem;
 }
 
-#linkDislike:hover {
+#linkLike2:hover {
   transform: scale(1.02);
   color: white;
   cursor: pointer;
@@ -181,6 +268,14 @@ export default {
   transform: scale(1.02);
   color: white;
   cursor: pointer;
+}
+
+#linkLike:focus {
+  color: black;
+}
+
+#linkLike2:focus {
+  color: red;
 }
 
 #avatarProfile {

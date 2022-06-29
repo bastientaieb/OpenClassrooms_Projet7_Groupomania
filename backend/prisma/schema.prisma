@@ -7,6 +7,10 @@ datasource db {
   url = env("DATABASE_URL")
   referentialIntegrity = "prisma"
 }
+enum Role {
+  USER
+  ADMIN
+}
 
 model User {
   id        Int      @id @default(autoincrement())
@@ -14,19 +18,25 @@ model User {
   password  String
   posts     Post[]
   comments  Comment[]
+  role      Role    @default(USER)
 }
-// Post[] & Comment [] => Relation One to Many
 
 model Post{
-  id        Int @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   content   String 
   imageUrl  String?
   userId    Int
-  user      User @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
   comments  Comment[]
   createdAt DateTime   @default(now())
 }
-// Comment [] => Relation One to Many
+
+model Likes {
+id          Int    @id @default(autoincrement()) @unique
+userId      Int
+postId      Int?
+email       String 
+}
 
 model Comment {
   id        Int @id @default(autoincrement())
@@ -38,7 +48,5 @@ model Comment {
   user      User @relation(fields: [userId], references: [id])
 }
 
-enum Role {
-  USER
-  ADMIN
-}
+
+

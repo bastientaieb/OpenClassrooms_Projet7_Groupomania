@@ -10,7 +10,7 @@ const routes = [
   { name: "signup", path: "/signup", component: signupPage },
   { name: "signin", path: "/signin", component: signinPage },
   { name: "home", path: "/home", component: homePage },
-  { name: "modify", path: "/home/modify", component: modifyPost },
+  { name: "modify", path: "/home/modify", component: modifyPost, props: true },
   { path: "/", redirect: "/home" },
 ];
 // Configuration des routes de l'application

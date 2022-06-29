@@ -18,7 +18,17 @@ export default {
     return {
       posts: [],
       currentUser: null,
+      role: this.isAdmin(),
     };
+  },
+  methods: {
+    isAdmin() {
+      let userLogged = localStorage.getItem("role");
+      if (userLogged === "ADMIN") {
+        console.log("Administrateur connecté");
+        return userLogged;
+      }
+    },
   },
   mounted() {
     const url = "http://localhost:3000/home/";
@@ -35,6 +45,9 @@ export default {
         }
       })
       .then((res) => {
+        const roleAdmin = res.userLogged.role;
+        localStorage.setItem("role", roleAdmin);
+
         const { posts, email } = res;
         this.posts = posts;
         this.currentUser = email;
@@ -51,6 +64,11 @@ export default {
     src="/groupomania-logo.png"
     alt="Logo entreprise Groupomania"
   />
+  <!-- Message d'accueil spécial pour l'administrateur -->
+  <div v-if="this.role == 'ADMIN'" class="mb-4" id="welcomeAdmin">
+    Bonjour {{ currentUser }} ! <br />
+    Vous êtes {{ role }} 🚀
+  </div>
   <div v-if="currentUser" class="container-sm">
     <postHome />
     <div v-for="post in posts">
@@ -72,7 +90,11 @@ export default {
 .mb-5 {
   width: 15rem;
 }
-
+#welcomeAdmin {
+  margin: auto;
+  text-align: center;
+  font-size: 22px;
+}
 body {
   background-color: rgb(237, 236, 236) !important;
 }

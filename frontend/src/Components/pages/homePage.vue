@@ -69,6 +69,9 @@ export default {
     Bonjour {{ currentUser }} ! <br />
     Vous êtes {{ role }} 🚀
   </div>
+  <div v-else="this.role == 'USER'" class="mb-4" id="welcomeAdmin">
+    Bonjour {{ currentUser }} ! 🚀
+  </div>
   <div v-if="currentUser" class="container-sm">
     <postHome />
     <div v-for="post in posts">
@@ -87,7 +90,6 @@ export default {
 </template>
 
 <style scoped>
-
 .mb-5 {
   width: 15rem;
 }

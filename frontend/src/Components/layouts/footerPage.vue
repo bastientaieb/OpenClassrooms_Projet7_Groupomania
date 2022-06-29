@@ -8,17 +8,17 @@ export default {
 <template>
   <footer class="py-5 col-12 mt-1">
     <div
-      class="d-flex flex-column ms-5 flex-sm-row justify-content-between border-top"
+      class="d-flex flex-column ms-3 flex-sm-row justify-content-between border-top"
     >
       <p class="pt-3">&copy; 2022 Groupomania, Inc. All rights reserved.</p>
-      <div class="col-md-5 offset-md-1 mb-3 me-5 pt-3">
+      <div class="col-md-5 offset-md-1 mb-3 me-2 pt-3">
         <form>
           <h5>Souscrivez à la newsletter de Groupomania</h5>
           <p>
             Pour être au courant des évènements l'entreprise et bien d'autres
             surprises...
           </p>
-          <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+          <div class="d-flex flex-column flex-sm-row w-100 gap-1">
             <label for="newsletter1" class="visually-hidden"
               >Email address</label
             >

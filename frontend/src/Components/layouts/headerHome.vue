@@ -61,6 +61,12 @@ export default {
 </template>
 
 <style scoped>
+.btn {
+  background-color: var(--greyCG) !important;
+  color: white !important;
+  border-color: var(--greyCG) !important;
+}
+
 body {
   padding-bottom: 20px;
 }

@@ -21,13 +21,6 @@ export default {
     // Gère les boutons likes / annulations
   },
   methods: {
-    isAdmin() {
-      let userLogged = localStorage.getItem("role");
-      if (userLogged === "ADMIN") {
-        console.log("Administrateur connecté");
-        return userLogged;
-      }
-    },
     /* Envoi de la requête d'ajout d'un commentaire */
     addComments() {
       const url = "http://localhost:3000/home/" + this.$props.id;
@@ -49,11 +42,19 @@ export default {
             throw new Error("Erreur de chargement du contenu");
           }
         })
-        .then(() => {
+        .then((res) => {
+          console.log("res:", res);
           this.$router.go();
         })
         // Actualise la page pour récupérer tous les comments, dont le nouveau
         .catch((Error) => console.error("Erreur:", Error));
+    },
+    isAdmin() {
+      let userLogged = localStorage.getItem("role");
+      if (userLogged === "ADMIN") {
+        console.log("Administrateur connecté");
+        return userLogged;
+      }
     },
     /* Envoi de la requête de suppression du post et de ses commentaires */
     deletePost() {
@@ -224,6 +225,15 @@ export default {
 </template>
 
 <style scoped>
+@media (max-width: 768px) {
+  .card {
+    width: 100% !important;
+  }
+  .card-header {
+    margin-bottom: 10px;
+  }
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -296,6 +306,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 1 rem;
+  background-color: var(--pinkCG) !important;
 }
 
 .bi-trash-fill {
@@ -317,7 +328,7 @@ export default {
 }
 .card {
   margin: auto;
-  width: 50%;
+  width: 60%;
 }
 .card img {
   width: 100%;

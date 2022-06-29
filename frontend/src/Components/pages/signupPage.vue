@@ -142,6 +142,12 @@ async function createUser(email, password, confirmPassword) {
 </template>
 
 <style scoped>
+.btn {
+  background-color: var(--greyCG) !important;
+  color: white;
+  border-color: var(--greyCG) !important;
+}
+
 html,
 body {
   height: 100%;

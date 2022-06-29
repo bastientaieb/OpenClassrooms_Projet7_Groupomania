@@ -68,12 +68,16 @@ export default {
         <div
           class="input-image mb-3 d-flex justify-content-start align-items-center"
         >
-          <button @click="modifyPost" class="btn btn-primary" type="submit">
+          <button
+            @click="modifyPost"
+            class="btn-primary little-button"
+            type="submit"
+          >
             Modifier
           </button>
           <input
             type="file"
-            class="custom-file-input"
+            class="custom-file-input little-button"
             id="inputGroupFile03"
             @change="selectionOfFiles"
           />
@@ -88,7 +92,7 @@ export default {
 <style scoped>
 img {
   margin: auto;
-  width: 30rem;
+  width: 12rem;
   height: auto;
 }
 
@@ -97,6 +101,23 @@ img {
   align-items: center;
   gap: 1 rem;
   width: 100%;
+}
+@media (max-width: 768px) {
+  .little-button {
+    width: 5rem;
+    height: 1.3rem;
+    font-size: 10px;
+  }
+  input[type="file"] {
+    width: 6rem;
+    color: black;
+  }
+  .custom-file-input {
+    margin-left: 1px !important;
+  }
+  .d-flex {
+    flex-direction: column;
+  }
 }
 
 @media (min-width: 768px) {

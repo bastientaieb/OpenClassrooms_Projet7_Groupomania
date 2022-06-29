@@ -70,6 +70,19 @@ async function createComments(req, res) {
     res.status(500).send({ error: "Erreur de création du commentaire" });
   }
 }
+
+function findUniquePost(postId) {
+  return prisma.post.findUnique({
+    where: { id: postId },
+    include: {
+      user: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+}
 // Vérification que le post existe, puis on cherche l'utilisateur pour attribuer tous les éléments du commentaire qui sera créé.
 // On renvoie le post en entier car les comments font partis de l'objet post.
 
@@ -199,20 +212,6 @@ function addImage(req, post) {
 }
 // Créer l'URL de l'image géré par le Multer
 
-function findUniquePost(postId) {
-  return prisma.post.findUnique({
-    where: { id: postId },
-    include: {
-      user: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
-}
-// Méthode findUnique de prisma pour trouver le post qui reçoit un nouveau commentaire.
-
 function findUniquePostUser(postId) {
   return prisma.post.findUnique({
     where: { id: postId },
@@ -225,7 +224,7 @@ function findUniquePostUser(postId) {
     },
   });
 }
-// Méthode pour trouver le post précis d'un utilisateur. 
+// Méthode pour trouver le post précis d'un utilisateur.
 
 module.exports = {
   getPosts,

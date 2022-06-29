@@ -87,6 +87,7 @@ export default {
 </template>
 
 <style scoped>
+
 .mb-5 {
   width: 15rem;
 }

@@ -46,22 +46,6 @@ async function createUser(req, res) {
     if (newUser != null) {
       return res.status(400).send({ erreur: "Email déjà utilisé" });
     }
-    // On récupère le contenu qui formera les données du compte via la requête.
-    // On vérifie que la confirmation de mot de passe est correcte et on enregistre le nouvel utilisateur.
-    // On vérifie que l'e-mail n'est pas déjà pris.
-
-    /* Fonctions auxiliaires */
-    function passwordVerification(user, password) {
-      return bcrypt.compare(password, user.password);
-    }
-    // fonction qui vérifie si le mot de passe est correct.
-
-    function createToken(email) {
-      const jwtPassword = process.env.JWT_PASSWORD;
-      return jsonwebtoken.sign({ email }, jwtPassword, {
-        expiresIn: "24h",
-      });
-    }
     const hashedPassword = await hashPassword(password);
     const user = await saveUser({ email, password: hashedPassword });
     console.log(user);
@@ -70,8 +54,23 @@ async function createUser(req, res) {
     res.status(500).send({ error });
   }
 }
-// Fonction de cryptage du mot de passe.
-// Enregistrement du nouvel utilisateur.
+// On récupère le contenu qui formera les données du compte via la requête.
+// On vérifie que la confirmation de mot de passe est correcte et on enregistre le nouvel utilisateur.
+// On vérifie que l'e-mail n'est pas déjà pris.
+
+/* Fonctions auxiliaires */
+function passwordVerification(user, password) {
+  return bcrypt.compare(password, user.password);
+}
+// fonction qui vérifie si le mot de passe est correct.
+
+function createToken(email) {
+  const jwtPassword = process.env.JWT_PASSWORD;
+  return jsonwebtoken.sign({ email }, jwtPassword, {
+    expiresIn: "24h",
+  });
+}
+// Création du token
 
 function findUser(email) {
   return prisma.user.findUnique({ where: { email } });

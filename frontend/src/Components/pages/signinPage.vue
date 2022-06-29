@@ -118,7 +118,7 @@ function signUser(email, password) {
         </label>
       </div>
       <button
-        class="w-100 btn btn-warning btn-primary"
+        class="w-100 btn btn-primary"
         type="submit"
         @click.prevent="
           () => signUser(this.username, this.password, this.$router)
@@ -135,6 +135,12 @@ function signUser(email, password) {
 </template>
 
 <style scoped>
+.btn {
+  background-color: var(--greyCG) !important;
+  color: white;
+  border-color: var(--greyCG) !important;
+}
+
 .verifyEmptyInput {
   color: red;
 }

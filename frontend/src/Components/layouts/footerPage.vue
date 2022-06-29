@@ -28,7 +28,7 @@ export default {
               class="form-control"
               placeholder="Email address"
             />
-            <button class="btn btn-danger" type="button">Subscribe</button>
+            <button class="btn" type="button">Subscribe</button>
           </div>
         </form>
       </div>
@@ -38,7 +38,10 @@ export default {
 
 <style scoped>
 /* col-12 = width 100% bootstrap */
-
+.btn {
+  background-color: var(--redCG) !important;
+  color: white;
+}
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;

@@ -25,6 +25,11 @@ export default {
 </template>
 
 <style scoped>
+.btn {
+  background-color: var(--greyCG) !important;
+  color: white !important;
+  border-color: var(--greyCG) !important;
+}
 .text-end {
   margin-left: auto;
 }

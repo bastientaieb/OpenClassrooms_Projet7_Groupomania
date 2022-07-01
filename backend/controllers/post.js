@@ -175,23 +175,6 @@ async function createLikes(req, res) {
 // Appelle de la méthode Count pour compter le nombre de likes concernés sur le postId. (On ajoute 1 car la méthode commence à 0)
 // Méthode create pour ajouter le Like avec les éléments récupérés.
 
-async function getAllLikes(req, res) {
-  const postId = req.params.id;
-  console.log("postId:", postId);
-  const email = req.email;
-  console.log("email:", email);
-
-  await prisma.Likes.count({
-    _count: {
-      where: {
-        postId: req.params.id,
-      },
-    },
-  })
-    .then((likes) => res.send({ likes }))
-    .catch((error) => console.log("Erreur de décompte des likes", error));
-}
-
 async function deleteLike(req, res) {
   const postId = Number(req.params.id);
   console.log("postId:", postId);
@@ -245,5 +228,4 @@ module.exports = {
   createLikes,
   modifyPost,
   deleteLike,
-  getAllLikes,
 };

@@ -25,6 +25,9 @@ export default {
 </template>
 
 <style scoped>
+.text-white {
+  background-color: var(--redCG) !important;
+}
 .btn {
   background-color: var(--greyCG) !important;
   color: white !important;

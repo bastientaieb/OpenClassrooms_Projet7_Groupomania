@@ -38,6 +38,9 @@ export default {
         body: formData,
       })
         .then((res) => res.json())
+        .then(() => {
+          location.assign("http://localhost:8080/home");
+        })
         .catch((error) => console.error("Erreur du front :", error));
     },
   },

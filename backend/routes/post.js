@@ -18,7 +18,6 @@ const { verifyUser } = require("../middlewares/auth.js");
 /* Création du router pour les posts */
 const postRoutes = express.Router();
 
-postRoutes.get("/:id", verifyUser, getAllLikes);
 postRoutes.post("/", multer, verifyUser, createPosts);
 postRoutes.post("/modify/:id", verifyUser, multer, modifyPost);
 postRoutes.post("/:id/like", createLikes);

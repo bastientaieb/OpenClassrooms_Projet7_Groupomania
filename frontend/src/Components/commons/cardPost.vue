@@ -12,7 +12,6 @@ export default {
     return {
       comment: null,
       role: this.isAdmin(),
-      totalLikes: Number(" "),
     };
     // relié aux V-model (input)
     // Gère les droits Administrateurs
@@ -77,19 +76,6 @@ export default {
         .catch((Error) => console.error("Erreur front :", Error));
     },
     /* Envoi de la requête de suppression du post et de ses commentaires */
-    getAllLike() {
-      const url = "http://localhost:3000/home/" + this.$props.id;
-      fetch(url, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => (this.totalLikes = res.likes))
-        .catch((error) =>
-          console.log("Erreur du front pour récupérer les likes", error)
-        );
-    },
     /* Envoi de la requête pour créer un like sur le post */
     likePost() {
       const url = "http://localhost:3000/home/" + this.$props.id + "/like";
@@ -188,16 +174,6 @@ export default {
           <div>
             <span>Je n'aime plus</span>
           </div>
-        </div>
-        <div class="Likeconteneur">
-          <button
-            id="linkLike2"
-            class="btn btn-outline-primary mb-1 ms-4"
-            @click="getAllLike"
-          >
-            <i class="bi bi-bookmark-heart-fill"></i>
-          </button>
-          <div class="ms-4">{{ totalLikes }}</div>
         </div>
       </div>
     </div>

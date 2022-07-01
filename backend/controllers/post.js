@@ -145,49 +145,66 @@ async function modifyPost(req, res) {
 // On appelle la méthode update avec le content et la nouvelle image via son url.
 // Si il n'y a pas d'image dans la requête on update le post avec uniquement le nouveau contenu.
 
-async function displayLikes(req, res) {
+async function createLikes(req, res) {
   const email = req.body.email;
-
-  const userWhoLiked = await prisma.user.findUnique({ where: { email } });
-
-  const idOfUserWhoLiked = Number(userWhoLiked.id);
+  console.log("email:", email);
 
   const postId = Number(req.params.id);
+  console.log("postIdOfParams:", postId);
 
-  let numberOfLikes = await prisma.Likes.count({ where: { postId: postId } });
-  numberOfLikes = Number(numberOfLikes + 1);
+  const userWhoLiked = await prisma.user.findUnique({
+    where: { email: email },
+  });
+  console.log("userWhoLiked:", userWhoLiked);
 
-  const newLike = await prisma.Likes.create({
+  const idOfUserWhoLiked = Number(userWhoLiked.id);
+  console.log("idOfUserWhoLiked:", idOfUserWhoLiked);
+
+  await prisma.Likes.create({
     data: {
       userId: idOfUserWhoLiked,
       postId: postId,
       email: email,
     },
   })
-    .then((like) => res.send({ like, numberOfLikes }))
-    .catch((error) => res.send({ message: "Erreur d'ajout du like", error }));
+    .then((like) => res.json({ like }))
+    .catch((error) => res.json({ message: "Erreur d'ajout du like", error }));
 }
 // On récupère l'utilisateur qui Like via son email
 // On récupère l'Id du post liké
 // Appelle de la méthode Count pour compter le nombre de likes concernés sur le postId. (On ajoute 1 car la méthode commence à 0)
 // Méthode create pour ajouter le Like avec les éléments récupérés.
 
+async function getAllLikes(req, res) {
+  const postId = req.params.id;
+  console.log("postId:", postId);
+  const email = req.email;
+  console.log("email:", email);
+
+  await prisma.Likes.count({
+    _count: {
+      where: {
+        postId: req.params.id,
+      },
+    },
+  })
+    .then((likes) => res.send({ likes }))
+    .catch((error) => console.log("Erreur de décompte des likes", error));
+}
+
 async function deleteLike(req, res) {
   const postId = Number(req.params.id);
   console.log("postId:", postId);
 
-  const email = req.body.email;
+  const email = req.email;
   console.log("email :", email);
 
-  let numberOfLikesWithDelete = await prisma.Likes.count({
-    where: { postId: postId },
-  });
-  numberOfLikesWithDelete = Number(numberOfLikesWithDelete - 1);
-
   await prisma.Likes.deleteMany({
-    where: { email: email, postId: postId },
+    where: { postId: postId },
   })
-    .then((unlike) => res.send({ unlike, numberOfLikesWithDelete }))
+    .then((res) =>
+      res.send({ message: "like supprimé de la base de données", res })
+    )
     .catch((error) =>
       res.send({ message: "Impossible de retirer le like de ce post", error })
     );
@@ -227,7 +244,8 @@ module.exports = {
   createPosts,
   createComments,
   deletePosts,
-  displayLikes,
+  createLikes,
   modifyPost,
   deleteLike,
+  getAllLikes,
 };

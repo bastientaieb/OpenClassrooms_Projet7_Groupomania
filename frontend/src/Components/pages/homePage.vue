@@ -65,11 +65,11 @@ export default {
     alt="Logo entreprise Groupomania"
   />
   <!-- Message d'accueil spécial pour l'administrateur -->
-  <div v-if="this.role == 'ADMIN'" class="mb-4" id="welcomeAdmin">
+  <div v-if="this.role === 'ADMIN'" class="mb-4" id="welcomeAdmin">
     Bonjour {{ currentUser }} ! <br />
     Vous êtes {{ role }} 🚀
   </div>
-  <div v-else="this.role == 'USER'" class="mb-4" id="welcomeAdmin">
+  <div v-else="this.role === 'USER'" class="mb-4" id="welcomeAdmin">
     Bonjour {{ currentUser }} ! 🚀
   </div>
   <div v-if="currentUser" class="container-sm">

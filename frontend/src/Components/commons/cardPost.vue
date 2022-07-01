@@ -3,7 +3,6 @@
 import commentsPost from "./commentsPost.vue";
 import avatarProfile from "./avatarProfile.vue";
 import modify from "../pages/modifyPost.vue";
-import axios from "axios";
 export default {
   name: "cardPost",
   components: { commentsPost, avatarProfile },
@@ -13,14 +12,20 @@ export default {
     return {
       comment: null,
       role: this.isAdmin(),
-      showLike: true,
-      showDelete: false,
+      totalLikes: Number(" "),
     };
     // relié aux V-model (input)
     // Gère les droits Administrateurs
     // Gère les boutons likes / annulations
   },
   methods: {
+    isAdmin() {
+      let userLogged = localStorage.getItem("role");
+      if (userLogged === "ADMIN") {
+        console.log("Administrateur connecté");
+        return userLogged;
+      }
+    },
     /* Envoi de la requête d'ajout d'un commentaire */
     addComments() {
       const url = "http://localhost:3000/home/" + this.$props.id;
@@ -49,14 +54,6 @@ export default {
         // Actualise la page pour récupérer tous les comments, dont le nouveau
         .catch((Error) => console.error("Erreur:", Error));
     },
-    isAdmin() {
-      let userLogged = localStorage.getItem("role");
-      if (userLogged === "ADMIN") {
-        console.log("Administrateur connecté");
-        return userLogged;
-      }
-    },
-    /* Envoi de la requête de suppression du post et de ses commentaires */
     deletePost() {
       const url = "http://localhost:3000/home/" + this.$props.id;
       fetch(url, {
@@ -79,20 +76,33 @@ export default {
         })
         .catch((Error) => console.error("Erreur front :", Error));
     },
-    /* Envoi de la requête pour créer un like sur le post */
-    likePost() {
-      const url = "http://localhost:3000/home/" + this.$props.id + "/like";
-
+    /* Envoi de la requête de suppression du post et de ses commentaires */
+    getAllLike() {
+      const url = "http://localhost:3000/home/" + this.$props.id;
       fetch(url, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application / json",
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => this.totalLikes = res.likes)
+        .catch((error) =>
+          console.log("Erreur du front pour récupérer les likes", error)
+        );
+    },
+    /* Envoi de la requête pour créer un like sur le post */
+    likePost() {
+      const url = "http://localhost:3000/home/" + this.$props.id + "/like";
+      fetch(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         method: "POST",
         body: JSON.stringify({
-          email: this.$props.email,
-          id: this.$props.id,
+          email: this.$props.currentUser,
+          postId: this.$props.id,
         }),
       })
         .then((res) => res.json())
@@ -100,10 +110,8 @@ export default {
           console.error({ message: "Impossible de liker ", err })
         );
     },
-    /* Envoi de la requête de suppression du like */
     deleteLike() {
       const url = "http://localhost:3000/home/" + this.$props.id + "/like";
-
       fetch(url, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -111,11 +119,8 @@ export default {
           "Content-Type": "application/json",
         },
         method: "DELETE",
-        body: JSON.stringify({
-          email: this.$props.email,
-        }),
       })
-        .then((res) => res.json())
+        .then((res) => console.log("Like supprimé", res))
         .catch((err) =>
           console.error({ message: "Impossible de supprimer le like ", err })
         );
@@ -161,41 +166,38 @@ export default {
       <!-- Props content pour l'ajouter dynamiquement -->
       <div id="likeAndDislike" class="d-flex mb-3 gap-3">
         <div class="Likeconteneur">
-          <transition name="fade">
-            <button
-              v-on:click="showDelete = !showDelete"
-              v-if="showLike"
-              id="linkLike"
-              class="btn btn-outline-success mb-1"
-              @click="likePost"
-            >
-              <!-- Gestion dynamique des boutons likes, le bouton addLike apparait en premier puis l'annulation est disponible sans l'ajout du like -->
-              <i class="bi bi-hand-thumbs-up-fill" aria-hidden="true"></i>
-            </button>
-          </transition>
+          <button
+            id="linkLike"
+            class="btn btn-outline-success mb-1"
+            @click="likePost"
+          >
+            <i class="bi bi-hand-thumbs-up-fill" aria-hidden="true"></i>
+          </button>
           <div>
-            <transition name="fade"
-              ><span v-if="showLike" id="likeDislike">J'aime</span></transition
-            >
+            <span id="likeDislike">J'aime</span>
           </div>
         </div>
         <div class="Likeconteneur">
-          <transition name="fade">
-            <button
-              v-on:click="showLike = !showLike"
-              v-if="showDelete"
-              id="linkLike2"
-              class="btn btn-outline-primary mb-1"
-              @click="deleteLike"
-            >
-              <i class="bi bi-hand-thumbs-up-fill" aria-hidden="true"></i>
-            </button>
-          </transition>
+          <button
+            id="linkLike2"
+            class="btn btn-outline-primary mb-1"
+            @click="deleteLike"
+          >
+            <i class="bi bi-suit-heart" aria-hidden="true"></i>
+          </button>
           <div>
-            <transition name="fade">
-              <span v-if="showDelete" id="deleteLike">Annuler mon like </span>
-            </transition>
+            <span>Je n'aime plus</span>
           </div>
+        </div>
+        <div class="Likeconteneur">
+          <button
+            id="linkLike2"
+            class="btn btn-outline-primary mb-1 ms-4"
+            @click="getAllLike"
+          >
+            <i class="bi bi-bookmark-heart-fill"></i>
+          </button>
+          <div class="ms-4">{{ totalLikes }}</div>
         </div>
       </div>
     </div>
@@ -234,18 +236,10 @@ export default {
   }
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-
 #likeDislike {
   font-size: 0.9rem;
 }
-#deleteLike {
+#showLike {
   font-size: 0.9rem;
 }
 
@@ -262,8 +256,16 @@ export default {
   border-radius: 50%;
   border: none;
 }
-.bi-hand-thumbs-down-fill {
+.bi-suit-heart,
+.bi-bookmark-heart-fill {
   font-size: 1.4rem;
+}
+
+.bi-bookmark-heart-fill:hover {
+  transform: scale(1.05);
+}
+.bi-bookmark-heart-fill:active {
+  color: green;
 }
 
 #linkLike2:hover {

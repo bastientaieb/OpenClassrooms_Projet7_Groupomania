@@ -34,8 +34,10 @@ model Post{
 model Likes {
 id          Int    @id @default(autoincrement()) @unique
 userId      Int
-postId      Int?
+postId      Int
 email       String 
+
+@@unique(fields:[email, postId], name:"UniqueLike")
 }
 
 model Comment {

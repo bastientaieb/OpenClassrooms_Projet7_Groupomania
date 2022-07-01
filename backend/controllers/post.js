@@ -168,7 +168,7 @@ async function createLikes(req, res) {
     },
   })
     .then((like) => res.json({ like }))
-    .catch((error) => res.json({ message: "Erreur d'ajout du like", error }));
+    .catch((error) => res.json({ error }));
 }
 // On récupère l'utilisateur qui Like via son email
 // On récupère l'Id du post liké
@@ -205,9 +205,7 @@ async function deleteLike(req, res) {
     .then((res) =>
       res.send({ message: "like supprimé de la base de données", res })
     )
-    .catch((error) =>
-      res.send({ message: "Impossible de retirer le like de ce post", error })
-    );
+    .catch((error) => res.send({ error }));
 }
 // On récupère l'utilisateur qui Like via son email
 // On récupère l'Id du post liké

@@ -85,7 +85,7 @@ export default {
         },
       })
         .then((res) => res.json())
-        .then((res) => this.totalLikes = res.likes)
+        .then((res) => (this.totalLikes = res.likes))
         .catch((error) =>
           console.log("Erreur du front pour récupérer les likes", error)
         );

@@ -13,6 +13,7 @@ Le réseau social est créé from scratch avec les technologies suivantes :
 -JavaScript, -node, -Express, -JWT, -bcrypt, -dotenv -Multer, -MySQL avec PlanetScale et Prisma (Version Cloud).
 
 UTILISATION DU SITE GROUPOMANIA : 
+
 Un fichier .en_exemple existe pour stocker les variables environnements utilisées pour gérer le backend.
 
 Démarrer l'utilisation du projet
